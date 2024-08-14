@@ -3,55 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Streaming with Plyr</title>
+    <title>Streaming Player</title>
     <link rel="stylesheet" href="https://cdn.plyr.io/3.6.8/plyr.css" />
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .video-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            z-index: 1000;
+            color: #fff;
+        }
+
+        .popup a {
+            color: #1da1f2;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .popup-close {
+            margin-top: 15px;
+            cursor: pointer;
+            background-color: #555;
+            border: none;
+            padding: 10px 20px;
+            color: white;
+            border-radius: 5px;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 900;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <div class="logo">Streamly</div>
-    </header>
 
-    <section id="hero">
-        <div class="hero-content">
-            <h1>Welcome to Streamly</h1>
-            <p>Stream your favorite content with ease.</p>
-        </div>
-    </section>
+    <div class="video-container">
+        <video id="player" controls crossorigin playsinline></video>
+    </div>
 
-    <section id="player">
-        <div class="video-container">
-            <video id="player" controls crossorigin playsinline poster="thumbnail.jpg">
-                <!-- The source is set in script.js for HLS support -->
-            </video>
-        </div>
-    </section>
+    <div class="overlay"></div>
 
-    <section id="features">
-        <h2>Exclusive Features</h2>
-        <div class="features-grid">
-            <div class="feature-item">
-                <h3>High Quality Streaming</h3>
-                <p>Enjoy live streams in HD and 4K quality.</p>
-            </div>
-            <div class="feature-item">
-                <h3>Cross-Browser Support</h3>
-                <p>Stream on any device and browser seamlessly.</p>
-            </div>
-            <div class="feature-item">
-                <h3>Subtitles and Captions</h3>
-                <p>Watch with subtitles in multiple languages.</p>
-            </div>
-        </div>
-    </section>
-
-    <footer>
-        <p>&copy; 2024 Streamly. All rights reserved.</p>
-    </footer>
+    <div class="popup" id="popup">
+        <h2>Join Our Telegram Channel!</h2>
+        <p>Get the latest updates and content directly from our Telegram channel.</p>
+        <a href="https://t.me/star_ccricket" target="_blank">Join Now</a>
+        <br>
+        <button class="popup-close" onclick="closePopup()">Close</button>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script src="https://cdn.plyr.io/3.6.8/plyr.polyfilled.js"></script>
-    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const video = document.querySelector('#player');
+            const source = 'https://dai.google.com/linear/hls/event/-8ZdRZfGTvG731m1OlXeIg/master.m3u8'; // Replace with your M3U8 link
+
+            if (Hls.isSupported()) {
+                const hls = new Hls();
+                hls.loadSource(source);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, function () {
+                    video.play();
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = source;
+                video.addEventListener('loadedmetadata', function () {
+                    video.play();
+                });
+            }
+
+            const player = new Plyr(video, {
+                captions: { active: true, update: true, language: 'en' },
+            });
+
+            // Show the popup after 10 seconds
+            setTimeout(showPopup, 10000);
+        });
+
+        function showPopup() {
+            document.getElementById('popup').style.display = 'block';
+            document.querySelector('.overlay').style.display = 'block';
+        }
+
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+            document.querySelector('.overlay').style.display = 'none';
+        }
+    </script>
 </body>
-  </html>
-  
+</html>
