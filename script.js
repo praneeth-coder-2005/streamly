@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const video = document.querySelector('#player');
-    const source = 'https://path-to-your-m3u8-file/stream.m3u8';
+    const source = 'https://dai.google.com/linear/hls/event/-8ZdRZfGTvG731m1OlXeIg/master.m3u8';
 
     if (Hls.isSupported()) {
         const hls = new Hls();
