@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Streaming with Plyr</title>
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.6.8/plyr.css" />
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="logo">Streamly</div>
+    </header>
+
+    <section id="hero">
+        <div class="hero-content">
+            <h1>Welcome to Streamly</h1>
+            <p>Stream your favorite content with ease.</p>
+        </div>
+    </section>
+
+    <section id="player">
+        <div class="video-container">
+            <video id="player" controls crossorigin playsinline poster="thumbnail.jpg">
+                <!-- The source is set in script.js for HLS support -->
+            </video>
+        </div>
+    </section>
+
+    <section id="features">
+        <h2>Exclusive Features</h2>
+        <div class="features-grid">
+            <div class="feature-item">
+                <h3>High Quality Streaming</h3>
+                <p>Enjoy live streams in HD and 4K quality.</p>
+            </div>
+            <div class="feature-item">
+                <h3>Cross-Browser Support</h3>
+                <p>Stream on any device and browser seamlessly.</p>
+            </div>
+            <div class="feature-item">
+                <h3>Subtitles and Captions</h3>
+                <p>Watch with subtitles in multiple languages.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Streamly. All rights reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script src="https://cdn.plyr.io/3.6.8/plyr.polyfilled.js"></script>
+    <script src="script.js"></script>
+</body>
+  </html>
+  
