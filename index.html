@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultra Pro Streaming Experience</title>
+    <title>Ultra Pro Streaming Experience with Security</title>
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
     <style>
         /* Global Styles */
@@ -16,6 +16,17 @@
             overflow-x: hidden;
             color: white;
             position: relative;
+        }
+
+        /* Watermark */
+        .watermark {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            pointer-events: none;
+            z-index: 999;
         }
 
         /* Interactive Particle Background */
@@ -67,31 +78,6 @@
             margin-left: 10px;
         }
 
-        /* Floating Social Icons */
-        .social-icons {
-            position: fixed;
-            top: 50%;
-            right: 0;
-            transform: translateY(-50%);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .social-icons a {
-            background-color: #ff4500;
-            padding: 15px;
-            margin: 5px;
-            border-radius: 50%;
-            color: white;
-            text-align: center;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-
-        .social-icons a:hover {
-            background-color: #ff5722;
-            transform: scale(1.1);
-        }
-
         /* Telegram Channel Popup */
         .telegram-popup {
             position: fixed;
@@ -137,78 +123,6 @@
             border-radius: 5px;
         }
 
-        /* Live Chat */
-        .live-chat {
-            max-width: 1200px;
-            margin: 20px auto;
-            background-color: rgba(0, 0, 0, 0.7);
-            border-radius: 10px;
-            padding: 20px;
-        }
-
-        .live-chat-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .live-chat-body {
-            max-height: 300px;
-            overflow-y: scroll;
-            background-color: rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 15px;
-        }
-
-        .live-chat-body p {
-            margin-bottom: 10px;
-            word-wrap: break-word;
-        }
-
-        .live-chat-input {
-            display: flex;
-            margin-top: 15px;
-        }
-
-        .live-chat-input input {
-            flex: 1;
-            padding: 10px;
-            margin-right: 10px;
-            border-radius: 5px;
-            border: 1px solid #444;
-            background-color: #222;
-            color: white;
-        }
-
-        .live-chat-input button {
-            padding: 10px 20px;
-            background-color: #ff4500;
-            border: none;
-            cursor: pointer;
-            color: white;
-            border-radius: 5px;
-        }
-
-        /* Reactions Inside Chat */
-        .reactions {
-            display: flex;
-            gap: 15px;
-            margin-top: 10px;
-        }
-
-        .reactions button {
-            background-color: transparent;
-            border: none;
-            cursor: pointer;
-            font-size: 24px;
-            transition: transform 0.2s, background-color 0.3s ease;
-        }
-
-        .reactions button:hover {
-            transform: scale(1.3);
-        }
-
         /* Footer */
         .footer {
             position: fixed;
@@ -224,9 +138,17 @@
         .footer p {
             margin: 0;
         }
+
+        /* Disable Selection */
+        body {
+            user-select: none;
+        }
     </style>
 </head>
 <body>
+
+    <!-- Watermark -->
+    <div class="watermark">Protected Stream</div>
 
     <!-- Interactive Particle Background -->
     <div id="particles-js"></div>
@@ -235,39 +157,13 @@
     <div class="video-container">
         <div class="plyr__video-wrapper">
             <video id="player" controls crossorigin playsinline>
-                <source type="application/x-mpegURL" src="https://dai.google.com/linear/hls/event/7pJ7rycbTf64mCjtQJNsbA/master.m3u8">
+                <!-- Tokenized URL for security -->
+                <source type="application/x-mpegURL" src="https://dai.google.com/linear/hls/event/7pJ7rycbTf64mCjtQJNsbA/master.m3u8?token=12345abcd"> <!-- Use a dynamic token generated server-side -->
             </video>
             <div class="live-viewers">
                 🔴 Live <span id="viewers-count">1200 viewers</span>
             </div>
         </div>
-    </div>
-
-    <!-- Live Chat Section -->
-    <div class="live-chat">
-        <div class="live-chat-header">
-            <h3>Live Chat</h3>
-        </div>
-        <div class="live-chat-body" id="chat-body">
-            <p><strong>User1:</strong> Great stream so far!</p>
-            <p><strong>User2:</strong> Loving the content!</p>
-        </div>
-        <div class="live-chat-input">
-            <input type="text" id="chat-input" placeholder="Type your message">
-            <button id="send-chat">Send</button>
-        </div>
-        <div class="reactions">
-            <button id="like-button">👍</button>
-            <button id="heart-button">❤️</button>
-            <button id="clap-button">👏</button>
-        </div>
-    </div>
-
-    <!-- Floating Social Icons -->
-    <div class="social-icons">
-        <a href="#" title="Facebook">📘</a>
-        <a href="#" title="Twitter">🐦</a>
-        <a href="#" title="Instagram">📸</a>
     </div>
 
     <!-- Telegram Channel Popup -->
@@ -285,7 +181,6 @@
 
     <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <!-- Particles.js library -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 
     <script>
@@ -294,19 +189,26 @@
             const viewersCount = document.getElementById('viewers-count');
             const telegramPopup = document.getElementById('telegram-popup');
             const popupClose = document.getElementById('popup-close');
-            const chatInput = document.getElementById('chat-input');
-            const chatBody = document.getElementById('chat-body');
-            const sendChatButton = document.getElementById('send-chat');
-            const reactions = {
-                like: document.getElementById('like-button'),
-                heart: document.getElementById('heart-button'),
-                clap: document.getElementById('clap-button'),
-            };
 
-            // Initialize HLS for M3U8 streaming
+            // Prevent Iframe Embedding (Client-Side)
+            if (window.top !== window.self) {
+                window.top.location = window.self.location;
+            }
+
+            // Disable Right Click
+            document.addEventListener('contextmenu', event => event.preventDefault());
+
+            // Disable Inspect Element (Basic)
+            document.addEventListener('keydown', function(event) {
+                if (event.ctrlKey && (event.key === 'i' || event.key === 'u' || event.key === 's' || event.key === 'c')) {
+                    event.preventDefault();
+                }
+            });
+
+            // Initialize HLS for M3U8 streaming with token
             if (Hls.isSupported()) {
                 const hls = new Hls();
-                hls.loadSource('https://dai.google.com/linear/hls/event/7pJ7rycbTf64mCjtQJNsbA/master.m3u8');
+                hls.loadSource(video.src);
                 hls.attachMedia(video);
             }
 
@@ -329,26 +231,6 @@
             // Close Telegram Popup
             popupClose.addEventListener('click', () => {
                 telegramPopup.style.display = 'none';
-            });
-
-            // Handle chat input submission
-            sendChatButton.addEventListener('click', () => {
-                const message = chatInput.value.trim();
-                if (message !== "") {
-                    const newMessage = `<p><strong>You:</strong> ${message}</p>`;
-                    chatBody.innerHTML += newMessage;
-                    chatBody.scrollTop = chatBody.scrollHeight;
-                    chatInput.value = "";
-                }
-            });
-
-            // Reactions handling
-            Object.keys(reactions).forEach(key => {
-                reactions[key].addEventListener('click', () => {
-                    const reactionMessage = `<p><strong>You reacted:</strong> ${reactions[key].textContent}</p>`;
-                    chatBody.innerHTML += reactionMessage;
-                    chatBody.scrollTop = chatBody.scrollHeight;
-                });
             });
         });
 
@@ -382,7 +264,7 @@
                         sync: false
                     }
                 },
-                size: {
+               size: {
                     value: 3,
                     random: true,
                     anim: {
