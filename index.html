@@ -137,6 +137,78 @@
             border-radius: 5px;
         }
 
+        /* Live Chat */
+        .live-chat {
+            max-width: 1200px;
+            margin: 20px auto;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .live-chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .live-chat-body {
+            max-height: 300px;
+            overflow-y: scroll;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        .live-chat-body p {
+            margin-bottom: 10px;
+            word-wrap: break-word;
+        }
+
+        .live-chat-input {
+            display: flex;
+            margin-top: 15px;
+        }
+
+        .live-chat-input input {
+            flex: 1;
+            padding: 10px;
+            margin-right: 10px;
+            border-radius: 5px;
+            border: 1px solid #444;
+            background-color: #222;
+            color: white;
+        }
+
+        .live-chat-input button {
+            padding: 10px 20px;
+            background-color: #ff4500;
+            border: none;
+            cursor: pointer;
+            color: white;
+            border-radius: 5px;
+        }
+
+        /* Reactions Inside Chat */
+        .reactions {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .reactions button {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            transition: transform 0.2s, background-color 0.3s ease;
+        }
+
+        .reactions button:hover {
+            transform: scale(1.3);
+        }
+
         /* Footer */
         .footer {
             position: fixed;
@@ -171,6 +243,26 @@
         </div>
     </div>
 
+    <!-- Live Chat Section -->
+    <div class="live-chat">
+        <div class="live-chat-header">
+            <h3>Live Chat</h3>
+        </div>
+        <div class="live-chat-body" id="chat-body">
+            <p><strong>User1:</strong> Great stream so far!</p>
+            <p><strong>User2:</strong> Loving the content!</p>
+        </div>
+        <div class="live-chat-input">
+            <input type="text" id="chat-input" placeholder="Type your message">
+            <button id="send-chat">Send</button>
+        </div>
+        <div class="reactions">
+            <button id="like-button">👍</button>
+            <button id="heart-button">❤️</button>
+            <button id="clap-button">👏</button>
+        </div>
+    </div>
+
     <!-- Floating Social Icons -->
     <div class="social-icons">
         <a href="#" title="Facebook">📘</a>
@@ -202,6 +294,14 @@
             const viewersCount = document.getElementById('viewers-count');
             const telegramPopup = document.getElementById('telegram-popup');
             const popupClose = document.getElementById('popup-close');
+            const chatInput = document.getElementById('chat-input');
+            const chatBody = document.getElementById('chat-body');
+            const sendChatButton = document.getElementById('send-chat');
+            const reactions = {
+                like: document.getElementById('like-button'),
+                heart: document.getElementById('heart-button'),
+                clap: document.getElementById('clap-button'),
+            };
 
             // Initialize HLS for M3U8 streaming
             if (Hls.isSupported()) {
@@ -229,6 +329,26 @@
             // Close Telegram Popup
             popupClose.addEventListener('click', () => {
                 telegramPopup.style.display = 'none';
+            });
+
+            // Handle chat input submission
+            sendChatButton.addEventListener('click', () => {
+                const message = chatInput.value.trim();
+                if (message !== "") {
+                    const newMessage = `<p><strong>You:</strong> ${message}</p>`;
+                    chatBody.innerHTML += newMessage;
+                    chatBody.scrollTop = chatBody.scrollHeight;
+                    chatInput.value = "";
+                }
+            });
+
+            // Reactions handling
+            Object.keys(reactions).forEach(key => {
+                reactions[key].addEventListener('click', () => {
+                    const reactionMessage = `<p><strong>You reacted:</strong> ${reactions[key].textContent}</p>`;
+                    chatBody.innerHTML += reactionMessage;
+                    chatBody.scrollTop = chatBody.scrollHeight;
+                });
             });
         });
 
