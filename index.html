@@ -15,43 +15,30 @@
             min-height: 100vh;
             overflow-x: hidden;
             color: white;
+            position: relative;
         }
 
-        /* Preloader */
-        .preloader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: rgba(0, 0, 0, 0.7);
-            z-index: 999;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-            visibility: visible;
-            opacity: 1;
-        }
-
-        .preloader.hidden {
-            visibility: hidden;
-            opacity: 0;
-        }
-
-        .preloader .spinner {
-            border: 8px solid rgba(255, 255, 255, 0.3);
-            border-top: 8px solid #ff4500;
+        /* Floating Background Elements */
+        .floating-element {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.2);
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            animation: spin 1s linear infinite;
+            animation: float 15s ease-in-out infinite;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+            100% { transform: translateY(0) rotate(360deg); }
         }
+
+        /* Floating Element Positions */
+        .floating-element:nth-child(1) { top: 20%; left: 10%; animation-duration: 12s; }
+        .floating-element:nth-child(2) { top: 70%; left: 25%; animation-duration: 18s; }
+        .floating-element:nth-child(3) { top: 50%; right: 10%; animation-duration: 20s; }
+        .floating-element:nth-child(4) { top: 80%; right: 25%; animation-duration: 10s; }
 
         /* Video Player Container */
         .video-container {
@@ -59,6 +46,8 @@
             margin: 0 auto;
             padding: 50px 20px;
             text-align: center;
+            position: relative;
+            z-index: 10;
         }
 
         /* Plyr Video Wrapper Styling */
@@ -71,14 +60,22 @@
             overflow: hidden;
         }
 
-        /* Custom Watermark */
-        .watermark {
+        /* Live Viewers Counter */
+        .live-viewers {
             position: absolute;
             top: 10px;
-            left: 10px;
-            font-size: 20px;
-            color: rgba(255, 255, 255, 0.8);
-            pointer-events: none;
+            right: 10px;
+            background: rgba(255, 69, 0, 0.8);
+            padding: 10px 15px;
+            border-radius: 20px;
+            color: white;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+        }
+
+        .live-viewers span {
+            margin-left: 10px;
         }
 
         /* Speed Control */
@@ -95,138 +92,54 @@
             color: white;
         }
 
-        .speed-control button {
-            background-color: #ff4500;
-            border: none;
-            padding: 5px 10px;
-            color: white;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-
-        .speed-control button:hover {
-            background-color: #ff5722;
-        }
-
-        /* Social Sharing */
-        .social-share {
-            position: absolute;
-            bottom: 60px;
-            right: 20px;
-            display: flex;
-            gap: 15px;
-        }
-
-        .social-share a {
-            width: 40px;
-            height: 40px;
-            background-color: #ff4500;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 50%;
-            color: white;
-            font-size: 18px;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-
-        .social-share a:hover {
-            background-color: #ff5722;
-            transform: scale(1.2);
-        }
-
-        /* Tooltips */
-        .tooltip {
-            position: relative;
-            display: inline-block;
-            cursor: pointer;
-        }
-
-        .tooltip .tooltiptext {
-            visibility: hidden;
-            width: 120px;
-            background-color: #000;
-            color: #fff;
-            text-align: center;
-            border-radius: 6px;
-            padding: 5px;
-            position: absolute;
-            z-index: 1;
-            bottom: 125%;
-            left: 50%;
-            margin-left: -60px;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .tooltip:hover .tooltiptext {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        /* Reaction Buttons */
-        .reactions {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .reactions button {
-            background-color: transparent;
-            border: none;
-            cursor: pointer;
-            font-size: 24px;
-            transition: transform 0.2s, background-color 0.3s ease;
-        }
-
-        .reactions button:hover {
-            transform: scale(1.3);
-        }
-
-        /* Collapsible Comments Section */
-        .comments {
-            max-width: 1200px;
+        /* Poll Widget */
+        .poll-widget {
             margin: 20px auto;
             padding: 20px;
             background-color: rgba(0, 0, 0, 0.7);
             border-radius: 10px;
-            display: none;
+            text-align: center;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
         }
 
-        .comments.active {
-            display: block;
+        .poll-widget h3 {
+            margin-bottom: 15px;
         }
 
-        .comments-header {
-            cursor: pointer;
+        .poll-widget .poll-option {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            margin-bottom: 10px;
+            padding: 10px;
         }
 
-        .comments-header h3 {
-            margin: 0;
+        .poll-widget .poll-option span {
+            font-weight: bold;
         }
 
-        /* Notification Pop-up */
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 15px;
+        /* Upcoming Events Section */
+        .upcoming-events {
+            background-color: rgba(255, 69, 0, 0.8);
+            padding: 20px;
             border-radius: 10px;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
+            max-width: 1200px;
+            margin: 40px auto;
+            text-align: center;
         }
 
-        .notification.show {
-            opacity: 1;
-            visibility: visible;
+        .upcoming-events h3 {
+            margin-bottom: 15px;
+        }
+
+        .upcoming-event {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.6);
+            border-radius: 10px;
         }
 
         /* Footer */
@@ -244,32 +157,15 @@
         .footer p {
             margin: 0;
         }
-
-        /* Responsiveness */
-        @media (max-width: 768px) {
-            .speed-control {
-                top: 10px;
-                right: 10px;
-                padding: 5px;
-            }
-
-            .social-share a {
-                width: 35px;
-                height: 35px;
-            }
-
-            .footer {
-                font-size: 14px;
-            }
-        }
     </style>
 </head>
 <body>
 
-    <!-- Preloader -->
-    <div class="preloader" id="preloader">
-        <div class="spinner"></div>
-    </div>
+    <!-- Floating Background Elements -->
+    <div class="floating-element"></div>
+    <div class="floating-element"></div>
+    <div class="floating-element"></div>
+    <div class="floating-element"></div>
 
     <!-- Video Player Container -->
     <div class="video-container">
@@ -277,45 +173,35 @@
             <video id="player" controls crossorigin playsinline>
                 <source type="application/x-mpegURL" src="https://dai.google.com/linear/hls/event/7pJ7rycbTf64mCjtQJNsbA/master.m3u8">
             </video>
-            <div class="watermark">Ultra Pro Stream</div>
-        </div>
-
-        <!-- Reactions Below Video -->
-        <div class="reactions">
-            <button class="tooltip">👍 <span class="tooltiptext">Like</span></button>
-            <button class="tooltip">❤️ <span class="tooltiptext">Love</span></button>
-            <button class="tooltip">👏 <span class="tooltiptext">Clap</span></button>
-        </div>
-
-        <!-- Collapsible Comments Section -->
-        <div class="comments" id="comments">
-            <div class="comments-header" onclick="toggleComments()">
-                <h3>Comments</h3>
-                <span>▼</span>
-            </div>
-            <div class="comments-body">
-                <p>User1: Amazing content!</p>
-                <p>User2: Really enjoyed this stream!</p>
+            <div class="live-viewers">
+                🔴 Live <span id="viewers-count">1200 viewers</span>
             </div>
         </div>
+
+        <!-- Poll Widget -->
+        <div class="poll-widget">
+            <h3>What did you think of the stream?</h3>
+            <div class="poll-option">
+                <span>Amazing!</span>
+                <span>75%</span>
+            </div>
+            <div class="poll-option">
+                <span>Good</span>
+                <span>20%</span>
+            </div>
+            <div class="poll-option">
+                <span>Okay</span>
+                <span>5%</span>
+            </div>
+        </div>
     </div>
 
-    <!-- Speed Control -->
-    <div class="speed-control">
-        <span>Speed:</span>
-        <button id="speed-up">+</button>
-        <button id="speed-down">-</button>
-    </div>
-    <!-- Social Share -->
-    <div class="social-share">
-        <a href="#" title="Share on Facebook">📘</a>
-        <a href="#" title="Share on Twitter">🐦</a>
-        <a href="#" title="Share on Instagram">📸</a>
-    </div>
-
-    <!-- Notification Pop-up -->
-    <div class="notification" id="notification">
-        Thanks for your reaction!
+    <!-- Upcoming Events Section -->
+    <div class="upcoming-events">
+        <h3>Upcoming Live Events</h3>
+        <div class="upcoming-event">🎥 Live Concert - August 25th, 2024</div>
+        <div class="upcoming-event">🏆 Gaming Tournament - September 1st, 2024</div>
+        <div class="upcoming-event">📺 Movie Premiere - September 10th, 2024</div>
     </div>
 
     <!-- Footer -->
@@ -328,14 +214,12 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const video = document.querySelector('#player');
-            const preloader = document.getElementById('preloader');
-            const notification = document.getElementById('notification');
-            const comments = document.getElementById('comments');
+            const viewersCount = document.getElementById('viewers-count');
 
             // Initialize HLS for M3U8 streaming
             if (Hls.isSupported()) {
                 const hls = new Hls();
-                hls.loadSource('https://dai.google.com/linear/hls/event/7pJ7rycbTf64mCjtQJNsbA/master.m3u8'); // Default stream URL
+                hls.loadSource('https://dai.google.com/linear/hls/event/7pJ7rycbTf64mCjtQJNsbA/master.m3u8');
                 hls.attachMedia(video);
             }
 
@@ -344,34 +228,11 @@
                 controls: ['play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
             });
 
-            // Hide Preloader when the video is ready
-            player.on('ready', () => {
-                preloader.classList.add('hidden');
-            });
-
-            // Show notification after reactions
-            document.querySelectorAll('.reactions button').forEach(button => {
-                button.addEventListener('click', () => {
-                    notification.classList.add('show');
-                    setTimeout(() => {
-                        notification.classList.remove('show');
-                    }, 2000);
-                });
-            });
-
-            // Speed Control
-            document.getElementById('speed-up').addEventListener('click', () => {
-                player.speed += 0.25;
-            });
-
-            document.getElementById('speed-down').addEventListener('click', () => {
-                player.speed = Math.max(player.speed - 0.25, 0.5);
-            });
-
-            // Toggle Comments Section
-            window.toggleComments = function () {
-                comments.classList.toggle('active');
-            };
+            // Simulate Live Viewers Count Update
+            setInterval(() => {
+                const viewers = Math.floor(1000 + Math.random() * 1000);
+                viewersCount.textContent = `${viewers} viewers`;
+            }, 5000); // Updates every 5 seconds
         });
     </script>
 
