@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultra Pro Streaming Experience with Security</title>
+    <title>Ultra Pro Streaming Experience</title>
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
     <style>
         /* Global Styles */
@@ -16,28 +16,6 @@
             overflow-x: hidden;
             color: white;
             position: relative;
-        }
-
-        /* Watermark */
-        .watermark {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            font-size: 20px;
-            color: rgba(255, 255, 255, 0.7);
-            pointer-events: none;
-            z-index: 999;
-        }
-
-        /* Interactive Particle Background */
-        #particles-js {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            top: 0;
-            left: 0;
-            background: linear-gradient(45deg, #0f0c29, #302b63, #24243e);
         }
 
         /* Video Player Container */
@@ -76,51 +54,6 @@
 
         .live-viewers span {
             margin-left: 10px;
-        }
-
-        /* Telegram Channel Popup */
-        .telegram-popup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(0, 0, 0, 0.9);
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            max-width: 400px;
-            display: none;
-            z-index: 1000;
-        }
-
-        .telegram-popup h3 {
-            margin-bottom: 10px;
-        }
-
-        .telegram-popup a {
-            background-color: #0088cc;
-            padding: 10px 20px;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            display: inline-block;
-            margin-top: 10px;
-            transition: background-color 0.3s ease;
-        }
-
-        .telegram-popup a:hover {
-            background-color: #006699;
-        }
-
-        .telegram-popup-close {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            cursor: pointer;
-            background: rgba(255, 255, 255, 0.2);
-            padding: 5px 10px;
-            border-radius: 5px;
         }
 
         /* Live Chat */
@@ -195,12 +128,6 @@
 </head>
 <body>
 
-    <!-- Watermark -->
-    <div class="watermark">Protected Stream</div>
-
-    <!-- Interactive Particle Background -->
-    <div id="particles-js"></div>
-
     <!-- Video Player Container -->
     <div class="video-container">
         <div class="plyr__video-wrapper">
@@ -228,14 +155,6 @@
         </div>
     </div>
 
-    <!-- Telegram Channel Popup -->
-    <div class="telegram-popup" id="telegram-popup">
-        <span class="telegram-popup-close" id="popup-close">&times;</span>
-        <h3>Join Our Telegram Channel!</h3>
-        <p>Stay updated with the latest news and live streams. Don't miss out!</p>
-        <a href="https://t.me/star_ccricket" target="_blank">Join Now</a>
-    </div>
-
     <!-- Footer -->
     <div class="footer">
         <p>© 2024 Ultra Pro Streaming. All rights reserved.</p>
@@ -243,14 +162,11 @@
 
     <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const video = document.querySelector('#player');
             const viewersCount = document.getElementById('viewers-count');
-            const telegramPopup = document.getElementById('telegram-popup');
-            const popupClose = document.getElementById('popup-close');
             const chatInput = document.getElementById('chat-input');
             const chatBody = document.getElementById('chat-body');
             const sendChatButton = document.getElementById('send-chat');
@@ -278,16 +194,6 @@
                 viewersCount.textContent = `${viewers} viewers`;
             }, 5000); // Updates every 5 seconds
 
-            // Display Telegram Popup after delay
-            setTimeout(() => {
-                telegramPopup.style.display = 'block';
-            }, 8000); // Show popup after 8 seconds
-
-            // Close Telegram Popup
-            popupClose.addEventListener('click', () => {
-                telegramPopup.style.display = 'none';
-            });
-
             // Handle chat input submission
             sendChatButton.addEventListener('click', () => {
                 const message = chatInput.value.trim();
@@ -298,110 +204,6 @@
                     chatInput.value = "";
                 }
             });
-        });
-
-        // Initialize Particles.js for interactive background
-        particlesJS('particles-js', {
-            particles: {
-                number: {
-                    value: 100,
-                    density: {
-                        enable: true,
-                        value_area: 800
-                    }
-                },
-                color: {
-                    value: "#ffffff"
-                },
-                shape: {
-                    type: "circle",
-                    stroke: {
-                        width: 0,
-                        color: "#000000"
-                    }
-                },
-                opacity: {
-                    value: 0.5,
-                    random: false,
-                    anim: {
-                        enable: false,
-                        speed: 1,
-                        opacity_min: 0.1,
-                        sync: false
-                    }
-                },
-                size: {
-                    value: 3,
-                    random: true,
-                    anim: {
-                        enable: false,
-                        speed: 40,
-                        size_min: 0.1,
-                        sync: false
-                    }
-                },
-                line_linked: {
-                    enable: true,
-                    distance: 150,
-                    color: "#ffffff",
-                    opacity: 0.4,
-                    width: 1
-                },
-                move: {
-                    enable: true,
-                    speed: 6,
-                    direction: "none",
-                    random: false,
-                    straight: false,
-                    out_mode: "out",
-                    bounce: false,
-                    attract: {
-                        enable: false,
-                        rotateX: 600,
-                        rotateY: 1200
-                    }
-                }
-            },
-            interactivity: {
-                detect_on: "canvas",
-                events: {
-                    onhover: {
-                        enable: true,
-                        mode: "repulse"
-                    },
-                    onclick: {
-                        enable: true,
-                        mode: "push"
-                    },
-                    resize: true
-                },
-                modes: {
-                    grab: {
-                        distance: 400,
-                        line_linked: {
-                            opacity: 1
-                        }
-                    },
-                    bubble: {
-                        distance: 400,
-                        size: 40,
-                        duration: 2,
-                        opacity: 8,
-                        speed: 3
-                    },
-                    repulse: {
-                        distance: 200,
-                        duration: 0.4
-                    },
-                    push: {
-                        particles_nb: 4
-                    },
-                    remove: {
-                        particles_nb: 2
-                    }
-                }
-            },
-            retina_detect: true
         });
     </script>
 
