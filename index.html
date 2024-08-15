@@ -191,11 +191,6 @@
         .footer p {
             margin: 0;
         }
-
-        /* Disable Selection */
-        body {
-            user-select: none;
-        }
     </style>
 </head>
 <body>
@@ -260,26 +255,16 @@
             const chatBody = document.getElementById('chat-body');
             const sendChatButton = document.getElementById('send-chat');
 
-            // Prevent Iframe Embedding (Client-Side)
-            if (window.top !== window.self) {
-                window.top.location = window.self.location;
-            }
-
-            // Disable Right Click
-            document.addEventListener('contextmenu', event => event.preventDefault());
-
-            // Disable Inspect Element (Basic)
-            document.addEventListener('keydown', function(event) {
-                if (event.ctrlKey && (event.key === 'i' || event.key === 'u' || event.key === 's' || event.key === 'c')) {
-                    event.preventDefault();
-                }
-            });
-
             // Initialize HLS for M3U8 streaming
             if (Hls.isSupported()) {
                 const hls = new Hls();
                 hls.loadSource(video.src);
                 hls.attachMedia(video);
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = "https://dai.google.com/linear/hls/event/7pJ7rycbTf64mCjtQJNsbA/master.m3u8";
+                video.addEventListener('loadedmetadata', () => {
+                    video.play();
+                });
             }
 
             // Plyr instance with default controls
