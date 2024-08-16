@@ -18,6 +18,17 @@
             position: relative;
         }
 
+        /* Interactive Particle Background */
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            top: 0;
+            left: 0;
+            background: linear-gradient(45deg, #0f0c29, #302b63, #24243e);
+        }
+
         /* Video Player Container */
         .video-container {
             max-width: 1200px;
@@ -54,6 +65,76 @@
 
         .live-viewers span {
             margin-left: 10px;
+        }
+
+        /* Floating Social Icons */
+        .social-icons {
+            position: fixed;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .social-icons a {
+            background-color: #ff4500;
+            padding: 15px;
+            margin: 5px;
+            border-radius: 50%;
+            color: white;
+            text-align: center;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            background-color: #ff5722;
+            transform: scale(1.1);
+        }
+
+        /* Telegram Channel Popup */
+        .telegram-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 400px;
+            display: none;
+            z-index: 1000;
+        }
+
+        .telegram-popup h3 {
+            margin-bottom: 10px;
+        }
+
+        .telegram-popup a {
+            background-color: #0088cc;
+            padding: 10px 20px;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .telegram-popup a:hover {
+            background-color: #006699;
+        }
+
+        .telegram-popup-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 10px;
+            border-radius: 5px;
         }
 
         /* Live Chat */
@@ -109,6 +190,25 @@
             border-radius: 5px;
         }
 
+        /* Reactions Inside Chat */
+        .reactions {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .reactions button {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            transition: transform 0.2s, background-color 0.3s ease;
+        }
+
+        .reactions button:hover {
+            transform: scale(1.3);
+        }
+
         /* Footer */
         .footer {
             position: fixed;
@@ -127,6 +227,9 @@
     </style>
 </head>
 <body>
+
+    <!-- Interactive Particle Background -->
+    <div id="particles-js"></div>
 
     <!-- Video Player Container -->
     <div class="video-container">
@@ -153,6 +256,26 @@
             <input type="text" id="chat-input" placeholder="Type your message">
             <button id="send-chat">Send</button>
         </div>
+        <div class="reactions">
+            <button id="like-button">👍</button>
+            <button id="heart-button">❤️</button>
+            <button id="clap-button">👏</button>
+        </div>
+    </div>
+
+    <!-- Floating Social Icons -->
+    <div class="social-icons">
+        <a href="#" title="Facebook">📘</a>
+        <a href="#" title="Twitter">🐦</a>
+        <a href="#" title="Instagram">📸</a>
+    </div>
+
+    <!-- Telegram Channel Popup -->
+    <div class="telegram-popup" id="telegram-popup">
+        <span class="telegram-popup-close" id="popup-close">&times;</span>
+        <h3>Join Our Telegram Channel!</h3>
+        <p>Stay updated with the latest news and live streams. Don't miss out!</p>
+        <a href="https://t.me/star_ccricket" target="_blank">Join Now</a>
     </div>
 
     <!-- Footer -->
@@ -162,25 +285,29 @@
 
     <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <!-- Particles.js library -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const video = document.querySelector('#player');
             const viewersCount = document.getElementById('viewers-count');
+            const telegramPopup = document.getElementById('telegram-popup');
+            const popupClose = document.getElementById('popup-close');
             const chatInput = document.getElementById('chat-input');
             const chatBody = document.getElementById('chat-body');
             const sendChatButton = document.getElementById('send-chat');
+            const reactions = {
+                like: document.getElementById('like-button'),
+                heart: document.getElementById('heart-button'),
+                clap: document.getElementById('clap-button'),
+            };
 
             // Initialize HLS for M3U8 streaming
             if (Hls.isSupported()) {
                 const hls = new Hls();
-                hls.loadSource(video.src);
+                hls.loadSource('https://dai.google.com/linear/hls/event/7pJ7rycbTf64mCjtQJNsbA/master.m3u8');
                 hls.attachMedia(video);
-            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                video.src = "https://dai.google.com/linear/hls/event/7pJ7rycbTf64mCjtQJNsbA/master.m3u8";
-                video.addEventListener('loadedmetadata', () => {
-                    video.play();
-                });
             }
 
             // Plyr instance with default controls
@@ -194,6 +321,16 @@
                 viewersCount.textContent = `${viewers} viewers`;
             }, 5000); // Updates every 5 seconds
 
+            // Display Telegram Popup after delay
+            setTimeout(() => {
+                telegramPopup.style.display = 'block';
+            }, 8000); // Show popup after 8 seconds
+
+            // Close Telegram Popup
+            popupClose.addEventListener('click', () => {
+                telegramPopup.style.display = 'none';
+            });
+
             // Handle chat input submission
             sendChatButton.addEventListener('click', () => {
                 const message = chatInput.value.trim();
@@ -204,6 +341,119 @@
                     chatInput.value = "";
                 }
             });
+
+            // Reactions handling
+            Object.keys(reactions).forEach(key => {
+                reactions[key].addEventListener('click', () => {
+                    const reactionMessage = `<p><strong>You reacted:</strong> ${reactions[key].textContent}</p>`;
+                    chatBody.innerHTML += reactionMessage;
+                    chatBody.scrollTop = chatBody.scrollHeight;
+                });
+            });
+        });
+
+        // Initialize Particles.js for interactive background
+        particlesJS('particles-js', {
+            particles: {
+                number: {
+                    value: 100,
+                    density: {
+                        enable: true,
+                        value_area: 800
+                    }
+                },
+                color: {
+                    value: "#ffffff"
+                },
+                shape: {
+                    type: "circle",
+                    stroke: {
+                        width: 0,
+                        color: "#000000"
+                    }
+                },
+                opacity: {
+                    value: 0.5,
+                    random: false,
+                    anim: {
+                        enable: false,
+                        speed: 1,
+                        opacity_min: 0.1,
+                        sync: false
+                    }
+                },
+                size: {
+                    value: 3,
+                    random: true,
+                    anim: {
+                        enable: false,
+                        speed: 40,
+                        size_min: 0.1,
+                        sync: false
+                    }
+                },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: "#ffffff",
+                    opacity: 0.4,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 6,
+                    direction: "none",
+                    random: false,
+                    straight: false,
+                    out_mode: "out",
+                    bounce: false,
+                    attract: {
+                        enable: false,
+                        rotateX: 600,
+                        rotateY: 1200
+                    }
+                }
+            },
+            interactivity: {
+                detect_on: "canvas",
+                events: {
+                    onhover: {
+                        enable: true,
+                        mode: "repulse"
+                    },
+                    onclick: {
+                        enable: true,
+                        mode: "push"
+                    },
+                    resize: true
+                },
+                modes: {
+                    grab: {
+                        distance: 400,
+                        line_linked: {
+                            opacity: 1
+                        }
+                    },
+                    bubble: {
+                        distance: 400,
+                        size: 40,
+                        duration: 2,
+                        opacity: 8,
+                        speed: 3
+                    },
+                    repulse: {
+                        distance: 200,
+                        duration: 0.4
+                    },
+                    push: {
+                        particles_nb: 4
+                    },
+                    remove: {
+                        particles_nb: 2
+                    }
+                }
+            },
+            retina_detect: true
         });
     </script>
 
